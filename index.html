@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Informatique Lycée</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4 font-sans text-slate-800 text-sm md:text-base">
+
+    <div id="app" class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl max-w-xl w-full border-t-8 border-blue-600">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-2xl mb-4 text-blue-600 shadow-sm border border-blue-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl md:text-3xl font-black tracking-tight uppercase leading-tight text-blue-900">Assistance Info</h1>
+            <p class="text-slate-500 font-medium mt-1 uppercase text-xs tracking-[0.2em]">Maintenance Lycée</p>
+        </div>
+        
+        <div id="content" class="min-h-[350px] fade-in"></div>
+
+        <div class="mt-8 pt-4 border-t border-slate-100">
+            <button id="backBtn" onclick="resetApp()" class="hidden w-full py-3 text-slate-400 hover:text-blue-600 font-bold transition flex items-center justify-center gap-2 text-xs uppercase tracking-widest">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Retour au début
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const content = document.getElementById('content');
+        const backBtn = document.getElementById('backBtn');
+
+        function getFormBlock(titre, url) {
+            return `<div class='bg-blue-50 p-6 rounded-2xl border-l-8 border-blue-500 text-blue-900'>
+                        <p class='font-bold text-xl mb-4 text-center'>${titre}</p>
+                        <p class='mb-6 text-center text-sm'>Veuillez utiliser le lien ci-dessous :</p>
+                        <a href="${url}" target="_blank" class="inline-block w-full text-center bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition shadow-lg btn-pulse uppercase tracking-wide">
+                           Accéder au lien →
+                        </a>
+                    </div>`;
+        }
+
+        const steps = {
+            'start': {
+                text: "Bienvenue. Choisissez votre profil :",
+                options: [
+                    { label: "Je suis un ÉLÈVE", next: 'eleve_main' },
+                    { label: "Je suis un ENSEIGNANT", next: 'enseignant_main' },
+                    { label: "PERSONNEL ADMINISTRATIF", next: 'admin_form' }
+                ]
+            },
+
+            'admin_form': { text: getFormBlock("Personnel Administratif", "https://framaforms.org/demande-dassistance-a-ladministration-1773933593"), options: [] },
+
+            /* --- SECTION ÉLÈVE --- */
+            'eleve_main': {
+                text: "Quel est la nature de votre problème ?",
+                options: [
+                    { label: "Ordinateur portable de la Région", next: 'pc_region_type' },
+                    { label: "Identifiant réseau du Lycée", next: 'id_lycee' }
+                ]
+            },
+            'id_lycee': { text: "<div class='bg-blue-50 p-6 rounded-2xl border-l-8 border-blue-500 text-blue-900 font-medium'>Pour tout souci d'identifiant réseau, rendez-vous au <strong>secrétariat du proviseur adjoint</strong>.</div>", options: [] },
+            
+            'pc_region_type': {
+                text: "Quelle partie du PC pose problème ?",
+                options: [
+                    { label: "Écran noir / Alimentation", next: 'alim_ctrl_alt' },
+                    { label: "Connexion au Wi-Fi", next: 'wifi_info' },
+                    { label: "Problème physique (Écran, Clavier...)", next: 'support_region' }
+                ]
+            },
+            
+            /* --- BRANCHE WIFI ÉLÈVE --- */
+            'wifi_info': {
+                text: "Réseau : <b>ordinateurslycéensnormands</b><br>En utilisant les identifiants Educonnect (ENT).",
+                options: [{ label: "Identifiants refusés", next: 'wifi_forget' }, { label: "OK", next: 'success' }]
+            },
+            'wifi_forget': {
+                text: "Allez dans Paramètres > Réseau > Wi-Fi > Gérer réseaux > <strong>Oublier</strong> 'ordinateurslycéensnormands' puis se reconnecter au WIFI avec les identifiants educonnect.",
+                options: [{ label: "Toujours pas", next: 'wifi_special_char' }]
+            },
+            'wifi_special_char': {
+                text: "Votre mot de passe contient-il des caractères spéciaux (&, #, é...) ?",
+                options: [{ label: "Oui", next: 'wifi_change_pwd' }, { label: "Non", next: 'wifi_updates' }]
+            },
+            'wifi_change_pwd': { text: "Changez votre MDP sur l'ENT pour n'utiliser que <strong>lettres et chiffres</strong>.", options: [{ label: "C'est fait", next: 'wifi_updates' }] },
+            'wifi_updates': { text: "Vérifiez que toutes les mises à jour Windows sont faites.", options: [{ label: "Déjà fait", next: 'contact_keith_wifi' }] },
+
+            'contact_keith_wifi': {
+                text: `<div class='bg-blue-50 p-6 rounded-2xl border-l-8 border-blue-600 text-blue-900'>
+                        <p class='font-bold text-lg mb-4'>Contacter M. KEITH</p>
+                        <p class='text-sm mb-6 uppercase tracking-tight'>Veuillez envoyer un message via la messagerie de l'ENT :</p>
+                        <a href="https://ent.l-educdenormandie.fr/conversation/inbox" target="_blank" class="inline-block w-full text-center bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition shadow-lg">
+                           Ouvrir la messagerie ENT →
+                        </a>
+                       </div>`,
+                options: []
+            },
+
+            /* --- BRANCHE ALIM ÉLÈVE --- */
+           'alim_ctrl_alt': {
+                text: "<strong>Test 1 :</strong> Appuyez sur <br> <span class='bg-slate-200 px-1 rounded'>Ctrl</span> + <span class='bg-slate-200 px-1 rounded'>Alt</span> + <span class='bg-slate-200 px-1 rounded'>Suppr</span>",
+                options: [{ label: "L'écran d'identification apparaît", next: 'success' }, { label: "Rien ne se passe", next: 'alim_voyant' }]
+            },
+            'alim_voyant': {
+                text: "Branchez le chargeur. Le voyant de charge s'allume-t-il ?",
+                options: [{ label: "Oui", next: 'alim_hard_reset' }, { label: "Non", next: 'contact_keith' }]
+            },
+            'alim_hard_reset': {
+                text: "<strong>Test 2 :</strong> Restez appuyé <strong>20 secondes</strong> sur le bouton de démarrage.",
+                options: [{ label: "Ça fonctionne !", next: 'success' }, { label: "Toujours rien", next: 'support_region' }]
+            },
+            /* --- SUPPORT RÉGION (PACK NUMÉRIQUE) --- */
+            'support_region': {
+                text: `<div class='space-y-4 text-sm'>
+                        <div class='bg-orange-50 p-4 rounded-xl border-l-4 border-orange-400'>
+                            <p class='font-bold text-orange-900 mb-2 underline'>SAV Pack Numérique Lycéen :</p>
+                            <p class='mb-2'>📞 <b>0800 97 87 00</b><br>(Lun-Sam / 8h-18h / Appel gratuit)</p>
+                            <p>📧 <b><a href="mailto:support.packnumeriquelyceen@normandie.fr">Contacter le support par mail</a></b></p>
+                        </div>
+                        <div class='grid grid-cols-1 gap-2'>
+                            <a href="URL_FORMULAIRE_A_VENIR" target="_blank" class="block text-center py-2 bg-slate-800 text-white rounded-lg text-xs font-bold uppercase tracking-widest">Formulaire en ligne (prévoir numéro d'identification lycéen)</a>
+                            <a href="https://www.normandie.fr/pack-numerique-lyceen" target="_blank" class="block text-center py-2 border-2 border-slate-800 text-slate-800 rounded-lg text-xs font-bold uppercase tracking-widest">Consulter l'aide web</a>
+                        </div>
+                       </div>`,
+                options: []
+            },
+
+            /* --- SECTION ENSEIGNANT --- */
+            'enseignant_main': {
+                text: "Quel est le domaine concerné ?",
+                options: [
+                    { label: "Création de compte / Oubli de MDP", next: 'ens_formulaire_wifi' },
+                    { label: "Accès Pronote ou ENT", next: 'ens_reseau_ent' },
+                    { label: "Problème dans une salle / un lieu", next: 'ens_lieux' }
+                ]
+            },
+            'ens_formulaire_wifi': {
+                text: getFormBlock("Identification Réseau", "https://framaforms.org/demande-de-creation-de-compte-ou-de-reinitialisation-de-mot-de-passe-1772288669"),
+                options: [{ label: "Terminé", next: 'success_form' }]
+            },
+            'ens_reseau_ent': {
+                text: "Quel est le souci ?",
+                options: [{ label: "Accès à Pronote", next: 'ens_pronote_type' }, { label: "Accès à l'ENT", next: 'ens_id_acad' }]
+            },
+            'ens_pronote_type': {
+                text: "Mode d'accès ?",
+                options: [{ label: "Logiciel Client", next: 'ens_pronote_client' }, { label: "Via l'ENT", next: 'ens_id_acad' }]
+            },
+            'ens_pronote_client': {
+                text: "Logiciel instable, préférez l'ENT.",
+                options: [{ label: "Utiliser l'ENT", next: 'ens_id_acad' }, { label: "Voir le secrétariat", next: 'ens_secretariat' }]
+            },
+            'ens_id_acad': {
+                text: "Identifiants académiques nécessaires.",
+                options: [{ label: "Je les ai", next: 'ens_chemin_pronote' }, { label: "Perdus", next: 'ens_secretariat' }]
+            },
+            'ens_chemin_pronote': {
+                text: "ENT > Personnel EN > Mes Applis > Pronote.",
+                options: [{ label: "OK", next: 'success' }, { label: "Erreur", next: 'ens_secretariat' }]
+            },
+            'ens_secretariat': { text: "Voir le secrétariat du proviseur adjoint.", options: [] },
+
+            'ens_lieux': {
+                text: "Lieu du problème :",
+                options: [
+                    { label: "Salle des profs", next: 'form_salle_profs' },
+                    { label: "CDI", next: 'form_cdi' },
+                    { label: "Rez-de-chaussée", next: 'form_rdc' },
+                    { label: "Vie scolaire", next: 'form_vie_scolaire' },
+                    { label: "1er étage (Hors info)", next: 'form_1er' },
+                    { label: "2ème étage (Hors info)", next: 'form_2eme' },
+                    { label: "Salles Infos", next: 'form_salles_infos' }
+                ]
+            },
+
+             'form_salle_profs': { text: getFormBlock("Salle des Profs", "https://framaforms.org/support-informatique-salle-des-profs-1773932209"), options: [{ label: "Fait", next: 'success_form' }] },
+            'form_cdi': { text: getFormBlock("CDI", "https://A_REMPLACER_2"), options: [{ label: "Fait", next: 'success_form' }] },
+            'form_rdc': { text: getFormBlock("Rez-de-chaussée", "https://framaforms.org/support-informatique-salles-du-rdc-1771176975"), options: [{ label: "Fait", next: 'success_form' }] },
+            'form_vie_scolaire': { text: getFormBlock("Vie Scolaire", "https://framaforms.org/support-informatique-vie-scolaire-1773932865"), options: [{ label: "Fait", next: 'success_form' }] },
+            'form_1er': { text: getFormBlock("1er Étage", "https://framaforms.org/support-informatique-salles-du-1er-etage-1773934299"), options: [{ label: "Fait", next: 'success_form' }] },
+            'form_2eme': { text: getFormBlock("2ème Étage", "https://framaforms.org/support-informatique-salles-du-2eme-etage-1773935004"), options: [{ label: "Fait", next: 'success_form' }] },
+            'form_salles_infos': { text: getFormBlock("Salles Infos", "https://A_REMPLACER_7"), options: [{ label: "Fait", next: 'success_form' }] },
+
+            'success': { text: "<div class='text-center'><p class='text-5xl mb-4 text-green-500'>✔</p><p class='text-xl font-black text-green-600 uppercase tracking-widest'>RÉSOLU</p></div>", options: [] },
+            'success_form': { text: "<div class='text-center'><p class='text-5xl mb-4'>📩</p><p class='text-xl font-black text-blue-600 uppercase tracking-widest'>SIGNALÉ</p></div>", options: [] }
+        };
+
+        function showStep(stepId) {
+            const step = steps[stepId];
+            if (stepId === 'start') { backBtn.classList.add('hidden'); } else { backBtn.classList.remove('hidden'); }
+            content.classList.remove('fade-in');
+            void content.offsetWidth;
+            content.classList.add('fade-in');
+            let html = `<div class="text-base mb-6 leading-relaxed text-slate-700 text-center md:text-left">${step.text}</div><div class="flex flex-col gap-2">`;
+            step.options.forEach(opt => {
+                html += `<button onclick="showStep('${opt.next}')" class="w-full text-left px-5 py-3 border-2 border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 font-bold transition-all shadow-sm active:scale-95 text-[11px] md:text-xs uppercase tracking-wider">${opt.label}</button>`;
+            });
+            html += `</div>`;
+            content.innerHTML = html;
+        }
+
+        function resetApp() { showStep('start'); }
+        showStep('start');
+    </script>
+</body>
+</html>
