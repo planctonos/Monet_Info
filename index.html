@@ -172,27 +172,9 @@
                 options: [{ label: "OK", next: 'success' }, { label: "Erreur", next: 'ens_secretariat' }]
             },
             'ens_secretariat': { text: "Voir le secrétariat du proviseur adjoint.", options: [] },
+            'ens_lieux': { text: getFormBlock("Formulaire de signalement", "https://framaforms.org/support-informatique-enseignement-1771176975"), options: [] },
 
-            'ens_lieux': {
-                text: "Lieu du problème :",
-                options: [
-                    { label: "Salle des profs", next: 'form_salle_profs' },
-                    { label: "CDI", next: 'form_cdi' },
-                    { label: "Rez-de-chaussée", next: 'form_rdc' },
-                    { label: "Vie scolaire", next: 'form_vie_scolaire' },
-                    { label: "1er étage (Hors info)", next: 'form_1er' },
-                    { label: "2ème étage (Hors info)", next: 'form_2eme' },
-                    { label: "Salles Infos", next: 'form_salles_infos' }
-                ]
-            },
-
-             'form_salle_profs': { text: getFormBlock("Salle des Profs", "https://framaforms.org/support-informatique-salle-des-profs-1773932209"), options: [{ label: "Fait", next: 'success_form' }] },
-            'form_cdi': { text: getFormBlock("CDI", "https://A_REMPLACER_2"), options: [{ label: "Fait", next: 'success_form' }] },
-            'form_rdc': { text: getFormBlock("Rez-de-chaussée", "https://framaforms.org/support-informatique-salles-du-rdc-1771176975"), options: [{ label: "Fait", next: 'success_form' }] },
-            'form_vie_scolaire': { text: getFormBlock("Vie Scolaire", "https://framaforms.org/support-informatique-vie-scolaire-1773932865"), options: [{ label: "Fait", next: 'success_form' }] },
-            'form_1er': { text: getFormBlock("1er Étage", "https://framaforms.org/support-informatique-salles-du-1er-etage-1773934299"), options: [{ label: "Fait", next: 'success_form' }] },
-            'form_2eme': { text: getFormBlock("2ème Étage", "https://framaforms.org/support-informatique-salles-du-2eme-etage-1773935004"), options: [{ label: "Fait", next: 'success_form' }] },
-            'form_salles_infos': { text: getFormBlock("Salles Infos", "https://A_REMPLACER_7"), options: [{ label: "Fait", next: 'success_form' }] },
+                 
 
             'success': { text: "<div class='text-center'><p class='text-5xl mb-4 text-green-500'>✔</p><p class='text-xl font-black text-green-600 uppercase tracking-widest'>RÉSOLU</p></div>", options: [] },
             'success_form': { text: "<div class='text-center'><p class='text-5xl mb-4'>📩</p><p class='text-xl font-black text-blue-600 uppercase tracking-widest'>SIGNALÉ</p></div>", options: [] }
