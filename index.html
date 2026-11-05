@@ -14,7 +14,7 @@
 </head>
 <body class="bg-slate-100 min-h-screen flex items-center justify-center p-4 font-sans text-slate-800 text-sm md:text-base">
 
-    <div id="app" class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl max-w-xl w-full border-t-8 border-blue-600">
+    <div id="app" class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl max-w-xl w-full border-t-8 border-blue-600 transition-all duration-300">
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-2xl mb-4 text-blue-600 shadow-sm border border-blue-100">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -40,15 +40,94 @@
     <script>
         const content = document.getElementById('content');
         const backBtn = document.getElementById('backBtn');
+        const appContainer = document.getElementById('app');
 
         function getFormBlock(titre, url) {
             return `<div class='bg-blue-50 p-6 rounded-2xl border-l-8 border-blue-500 text-blue-900'>
                         <p class='font-bold text-xl mb-4 text-center'>${titre}</p>
                         <p class='mb-6 text-center text-sm'>Veuillez utiliser le lien ci-dessous :</p>
                         <a href="${url}" target="_blank" class="inline-block w-full text-center bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition shadow-lg btn-pulse uppercase tracking-wide">
-                           Accéder au lien →
+                           Accéder au formulaire →
                         </a>
                     </div>`;
+        }
+
+        function getGuideLenteurHTML() {
+            return `
+                <div class="space-y-4 text-left text-xs md:text-sm text-slate-700">
+                    <div class="bg-slate-50 border-2 border-blue-800 rounded-2xl p-4">
+                        <h3 class="font-bold text-blue-900 text-sm md:text-base mb-2">1. Diagnostic initial : Une piste fréquente mais non exclusive</h3>
+                        <p class="leading-relaxed">Lorsqu'une session met plus de <strong>2 à 3 minutes</strong> à s'ouvrir (blocage prolongé sur l'écran <em>« Chargement du profil personnel... »</em>), plusieurs causes réseau ou matérielles peuvent intervenir.</p>
+                        <p class="mt-2 leading-relaxed">L'une des causes les plus courantes provient du dossier de profil de <strong>Mozilla Firefox</strong>. Lors des ouvertures et fermetures de session, Windows synchronise l'intégralité du profil utilisateur avec le serveur. Si des données de navigation et des caches se sont accumulés de manière anormale, le dossier gonfle excessivement et ralentit ce transfert.</p>
+                        <p class="mt-2 font-semibold text-blue-950">Il convient de vérifier la taille de ce dossier avant toute action de suppression.</p>
+                    </div>
+
+                    <div class="bg-slate-50 border-2 border-blue-800 rounded-2xl p-4">
+                        <h3 class="font-bold text-blue-900 text-sm md:text-base mb-2">2. Préparation : Afficher les éléments masqués (Windows 11)</h3>
+                        <p class="mb-2 italic text-slate-600">Cette manipulation s'effectue une fois la session ouverte, depuis l'Explorateur de fichiers :</p>
+                        <ol class="list-decimal pl-5 space-y-1">
+                            <li><strong>Fermer Firefox :</strong> veiller à ce qu'aucune fenêtre du navigateur ne reste ouverte.</li>
+                            <li><strong>Ouvrir l'Explorateur de fichiers</strong> (icône dossier jaune ou raccourci <kbd class="bg-slate-200 px-1 rounded font-mono">Win</kbd> + <kbd class="bg-slate-200 px-1 rounded font-mono">E</kbd>).</li>
+                            <li>Dans la barre d'outils supérieure, cliquer sur le menu <strong>Afficher</strong> (vers la droite).</li>
+                            <li>Dans le menu déroulant, pointer sur la dernière ligne <strong>Afficher &gt;</strong> puis cocher <strong>Éléments masqués</strong>.</li>
+                        </ol>
+                        <div class="mt-3 bg-white p-2 rounded-xl border border-slate-200 text-center">
+    <img src="menu.jpeg" alt="Afficher > Éléments masqués" class="mx-auto rounded border w-full max-w-lg object-contain" onerror="this.parentElement.innerHTML='<span class=\'text-slate-400 italic text-[11px]\'>[Image : Menu Afficher &gt; Afficher &gt; Éléments masqués]</span>'">
+    <span class="block text-[11px] text-slate-500 mt-1 italic">Menu Windows 11 : Afficher &rarr; Afficher &gt; &rarr; Éléments masqués</span>
+</div>
+                    </div>
+
+                    <div class="bg-slate-50 border-2 border-blue-800 rounded-2xl p-4">
+                        <h3 class="font-bold text-blue-900 text-sm md:text-base mb-2">3. Contrôle de la taille et suppression du dossier Mozilla</h3>
+                        <p class="font-semibold text-slate-800 mb-1">Accès au répertoire :</p>
+                        <ol class="list-decimal pl-5 space-y-1 mb-2">
+                            <li>Dans le volet de gauche, cliquer sur <strong>Ce PC</strong>, puis ouvrir successivement :<br>
+                                <code class="bg-slate-200 px-1.5 py-0.5 rounded text-[11px] font-mono break-all">Disque local (C:) &gt; Utilisateurs &gt; [Identifiant session] &gt; AppData &gt; Roaming</code>
+                            </li>
+                            <li>Faire un <strong>clic droit</strong> sur le dossier nommé <strong>Mozilla</strong>, puis cliquer sur <strong>Propriétés</strong>.</li>
+                        </ol>
+                        <p class="font-semibold text-slate-800 mb-1">Décision selon la taille constatée :</p>
+                        <ul class="list-disc pl-5 space-y-1 mb-2">
+                            <li><strong>Taille normale (20 à 150 Mo) :</strong> le profil Firefox n'est pas en cause. Ne rien supprimer et refermer la fenêtre.</li>
+                            <li><strong>Taille anormale (&gt; 500 Mo ou dépassant 1 Go) :</strong> le diagnostic est confirmé.</li>
+                        </ul>
+                        <p class="font-semibold text-slate-800 mb-1">Suppression (si anomalie confirmée) :</p>
+                        <ol class="list-decimal pl-5 space-y-1">
+                            <li>Fermer la fenêtre des propriétés.</li>
+                            <li>Faire un clic droit sur le dossier <strong>Mozilla</strong> puis choisir <strong>Supprimer</strong> (ou touche <kbd class="bg-slate-200 px-1 rounded font-mono">Suppr</kbd>).</li>
+                            <li>Vider la <strong>Corbeille</strong> sur le bureau.</li>
+                        </ol>
+                    </div>
+
+                    <div class="bg-red-50 border-2 border-red-700 rounded-2xl p-4 text-red-950">
+                        <h3 class="font-bold text-red-800 text-sm md:text-base mb-2">4. Précision essentielle : Délai lors de la fermeture de session</h3>
+                        <p class="leading-relaxed">La suppression effectuée dans <code class="bg-red-100 px-1 rounded font-mono">AppData</code> doit se répercuter sur l'espace serveur. C'est au moment de la <strong>fermeture de session</strong> que Windows procède à l'effacement effectif des milliers de fichiers sur le serveur.</p>
+                        <p class="mt-2 font-bold text-red-900">Le temps de déconnexion peut donc être à nouveau long (quelques minutes). Il ne faut surtout pas couper l'alimentation au bouton physique.</p>
+                        <p class="mt-1 text-slate-700 text-xs">Dès l'ouverture suivante, le profil allégé permettra une connexion plus rapide.</p>
+                    </div>
+
+                    <div class="bg-slate-50 border-2 border-blue-800 rounded-2xl p-4">
+                        <h3 class="font-bold text-blue-900 text-sm md:text-base mb-2">5. Précautions en salle informatique</h3>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>Ne jamais forcer l'extinction au bouton physique :</strong> interrompre brutalement la synchronisation corrompt fréquemment le profil et prolonge l'attente lors de la tentative suivante.</li>
+                            <li><strong>Application différée :</strong> patienter jusqu'à l'aboutissement effectif de la session avant d'appliquer la vérification et la suppression du dossier.</li>
+                            <li><strong>Anticipation :</strong> faire fermer la session de l'élève quelques minutes avant la sonnerie pour que la synchronisation serveur puisse se terminer.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-50 border-2 border-blue-600 rounded-2xl p-5 text-center mt-6">
+                        <p class="font-bold text-base md:text-lg text-blue-950 mb-4">J'ai réussi à faire la procédure ?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="showStep('start')" class="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition shadow text-xs md:text-sm uppercase tracking-wider">
+                                ✔ Oui (Retour accueil)
+                            </button>
+                            <button onclick="showStep('ens_lenteur_menu')" class="w-full py-3 px-4 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-xl transition shadow text-xs md:text-sm uppercase tracking-wider">
+                                ✖ Non (Questions lenteurs)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         const steps = {
@@ -110,7 +189,7 @@
             },
 
             /* --- BRANCHE ALIM ÉLÈVE --- */
-           'alim_ctrl_alt': {
+            'alim_ctrl_alt': {
                 text: "<strong>Test 1 :</strong> Appuyez sur <br> <span class='bg-slate-200 px-1 rounded'>Ctrl</span> + <span class='bg-slate-200 px-1 rounded'>Alt</span> + <span class='bg-slate-200 px-1 rounded'>Suppr</span>",
                 options: [{ label: "L'écran d'identification apparaît", next: 'success' }, { label: "Rien ne se passe", next: 'alim_voyant' }]
             },
@@ -142,11 +221,37 @@
             'enseignant_main': {
                 text: "Quel est le domaine concerné ?",
                 options: [
+                    { label: "Lenteur d'ouverture de session", next: 'ens_lenteur_menu' },
                     { label: "Création de compte / Oubli de MDP", next: 'ens_formulaire_wifi' },
                     { label: "Accès Pronote ou ENT", next: 'ens_reseau_ent' },
                     { label: "Problème dans une salle / un lieu", next: 'ens_lieux' }
                 ]
             },
+
+            /* --- NOUVEAU FLUX LENTEURS --- */
+            'ens_lenteur_menu': {
+                text: "Concernant les lenteurs d'ouverture de session :",
+                options: [
+                    { label: "1°) Ma session ou la session d'un élève met régulièrement plus de deux minutes à s'ouvrir", next: 'ens_lenteur_choix_action' },
+                    { label: "2°) Je vais patienter un peu plus finalement ça met moins de deux minutes", next: 'start' }
+                ]
+            },
+            'ens_lenteur_choix_action': {
+                text: "Que souhaitez-vous faire ?",
+                options: [
+                    { label: "1°) Je veux essayer de m'autodépanner ou de dépanner l'élève", next: 'ens_lenteur_guide' },
+                    { label: "2°) J'ai déjà essayé la procédure d'autodépannage ou je préfère demander de l'aide", next: 'ens_lenteur_form' }
+                ]
+            },
+            'ens_lenteur_form': {
+                text: getFormBlock("Lenteur d'ouverture de session", "https://framaforms.org/formulaire-lenteur-douverture-de-session-1793904954"),
+                options: []
+            },
+            'ens_lenteur_guide': {
+                customRenderer: getGuideLenteurHTML,
+                options: []
+            },
+
             'ens_formulaire_wifi': {
                 text: getFormBlock("Identification Réseau", "https://framaforms.org/demande-de-creation-de-compte-ou-de-reinitialisation-de-mot-de-passe-1772288669"),
                 options: [{ label: "Terminé", next: 'success_form' }]
@@ -174,18 +279,36 @@
             'ens_secretariat': { text: "Voir le secrétariat du proviseur adjoint.", options: [] },
             'ens_lieux': { text: getFormBlock("Formulaire de signalement", "https://framaforms.org/support-informatique-enseignement-1771176975"), options: [] },
 
-                 
-
             'success': { text: "<div class='text-center'><p class='text-5xl mb-4 text-green-500'>✔</p><p class='text-xl font-black text-green-600 uppercase tracking-widest'>RÉSOLU</p></div>", options: [] },
             'success_form': { text: "<div class='text-center'><p class='text-5xl mb-4'>📩</p><p class='text-xl font-black text-blue-600 uppercase tracking-widest'>SIGNALÉ</p></div>", options: [] }
         };
 
         function showStep(stepId) {
             const step = steps[stepId];
-            if (stepId === 'start') { backBtn.classList.add('hidden'); } else { backBtn.classList.remove('hidden'); }
+            if (stepId === 'start') { 
+                backBtn.classList.add('hidden'); 
+            } else { 
+                backBtn.classList.remove('hidden'); 
+            }
+
+            // Élargir le conteneur quand le guide complet est affiché
+            if (stepId === 'ens_lenteur_guide') {
+                appContainer.classList.remove('max-w-xl');
+                appContainer.classList.add('max-w-3xl');
+            } else {
+                appContainer.classList.remove('max-w-3xl');
+                appContainer.classList.add('max-w-xl');
+            }
+
             content.classList.remove('fade-in');
             void content.offsetWidth;
             content.classList.add('fade-in');
+
+            if (step.customRenderer) {
+                content.innerHTML = step.customRenderer();
+                return;
+            }
+
             let html = `<div class="text-base mb-6 leading-relaxed text-slate-700 text-center md:text-left">${step.text}</div><div class="flex flex-col gap-2">`;
             step.options.forEach(opt => {
                 html += `<button onclick="showStep('${opt.next}')" class="w-full text-left px-5 py-3 border-2 border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 font-bold transition-all shadow-sm active:scale-95 text-[11px] md:text-xs uppercase tracking-wider">${opt.label}</button>`;
